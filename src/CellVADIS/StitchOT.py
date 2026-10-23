@@ -3,8 +3,7 @@ import warnings
 import numpy as np
 import ot
 
-from .utils import get_fates, obs_key_wise_subsampling
-
+from .utils import get_fates
 
 
 def StitchOT(
@@ -27,7 +26,7 @@ def StitchOT(
 ):
     """
     StitchOT method for cell fate inference.
-    This method performs a series of OT solves from each source cell to each target location, 
+    This method performs a series of OT solves from each source cell to each target location,
     and then stitches the results together into a single fate matrix.
 
     Parameters
@@ -98,14 +97,18 @@ def StitchOT(
         data_source = adata[adata.obs["location"] == source_name].X
         data_target = adata[adata.obs["location"].isin(target_names)].X
 
-    target_locations = adata[adata.obs["location"].isin(target_names)].obs["location"].values
+    target_locations = (
+        adata[adata.obs["location"].isin(target_names)].obs["location"].values
+    )
 
     fate_groups_fractions = np.zeros(len(target_names), dtype=float_type)
     OT_plan = np.zeros((data_source.shape[0], data_target.shape[0]))
     source_marginals_threshold = np.zeros((data_source.shape[0], len(target_names)))
 
     for i, loc in enumerate(target_names):
-        C = ot.dist(data_source, data_target[target_locations == loc], metric=cost_metric)
+        C = ot.dist(
+            data_source, data_target[target_locations == loc], metric=cost_metric
+        )
         if cost_scaling == "median":
             C /= np.median(C)
         elif cost_scaling == "mean":
@@ -139,7 +142,9 @@ def StitchOT(
             OT_plan[:, target_locations == loc] *= fate_groups_fractions[i]
 
     if np.isnan(OT_plan).any():
-        warnings.warn("OT_plan contains NaN values; replacing them with 0.", UserWarning)
+        warnings.warn(
+            "OT_plan contains NaN values; replacing them with 0.", UserWarning
+        )
     OT_plan = np.nan_to_num(OT_plan, nan=0.0, posinf=0.0, neginf=0.0)
     row_sums = OT_plan.sum(axis=1, keepdims=True)
 
@@ -183,4 +188,3 @@ def StitchOT(
         return None
 
     return fate_matrix, norm_OT_plan, OT_plan
-

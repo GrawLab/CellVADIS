@@ -4,8 +4,8 @@
 
 CellVADIS is a Python toolkit based on optimal transport for inferring cross-tissue immune cell dynamics from single-cell snapshots, as obtained by e.g. scRNA-seq, flow cytometry or mass cytometry.
 
-By connecting single-cell measurements across tissue sites, CellVADIS enables the prediction of individual cell migration fates,the identification of tissue-specific trafficking signatures on circulating cells, as well as discovering tissue-specific homing niches of tissue-entering cells, which could support the inference of location-specific cell developmental trajectories. 
-It is designed for scenarios where you have a source compartment (for example blood) and want to estimate how these source cells are distributed across one or more target tissues or states. 
+By connecting single-cell measurements across tissue sites, CellVADIS enables the prediction of individual cell migration fates,the identification of tissue-specific trafficking signatures on circulating cells, as well as discovering tissue-specific homing niches of tissue-entering cells, which could support the inference of location-specific cell developmental trajectories.
+It is designed for scenarios where you have a source compartment (for example blood) and want to estimate how these source cells are distributed across one or more target tissues or states.
 
 ## What CellVADIS can do
 
@@ -70,7 +70,7 @@ adata = CellVADIS.utils.obs_key_wise_subsampling(
     adata,
     obs_keys="location",
     N_target=5000, #Number of cells to keep for each target tissue
-    N_source=10000, #Number of cells to keep in source tissue 
+    N_source=10000, #Number of cells to keep in source tissue
     source_name=source_name,
 )
 
@@ -161,7 +161,7 @@ These entries contain the fate probabilities, coupling matrices, grouping inform
 The repository includes example notebooks for two common scenarios:
 
 - `docs/notebooks/example_TICA.ipynb`: Exemplary workflow on scRNA-seq data from tissue immune cell atlas by Conde et al.
-- `docs/notebooks/example_MASS.ipynb`: cytometry-based workflow on the MASS atlas by Wong et al. 
+- `docs/notebooks/example_MASS.ipynb`: cytometry-based workflow on the MASS atlas by Wong et al.
 
 These notebooks show how to prepare the data, run the models, and visualize the results.
 

@@ -83,7 +83,6 @@ def plot_tissue_transition_proportions(
     return None
 
 
-
 def plot_dominant_fates(
     adata,
     output_key="stitchOT",
@@ -144,13 +143,9 @@ def plot_dominant_fates(
     )
 
 
-
-
-
 def plot_fate_probabilities_with_pie_charts(
     adata,
     output_key="stitchOT",
-    entropy_fade=False,
     n_cells_to_plot=100,
     indices=None,
     s=500,
@@ -172,8 +167,6 @@ def plot_fate_probabilities_with_pie_charts(
         Annotated dataset containing the source cells and their inferred fate matrix.
     output_key : str, default="stitchOT"
         Key in ``adata.uns`` that stores the fate matrix and target labels.
-    entropy_fade : bool, default=False
-        If True, fade the background points according to fate entropy.
     n_cells_to_plot : int, default=100
         Number of source cells to show as pie charts. A subset is sampled when the
         dataset is larger than this value.
@@ -215,17 +208,18 @@ def plot_fate_probabilities_with_pie_charts(
     sc.tl.umap(adata_source, min_dist=0.9, spread=0.9, random_state=42)
     umap_coords = adata_source.obsm["X_umap"]
 
-    if entropy_fade:
-        entropies = -np.sum(fate_matrix * np.log2(fate_matrix), axis=1)
-
-    umap_coords = (umap_coords - umap_coords.min()) / (umap_coords.max() - umap_coords.min())
+    umap_coords = (umap_coords - umap_coords.min()) / (
+        umap_coords.max() - umap_coords.min()
+    )
     num_data = umap_coords.shape[0]
 
     if indices is not None:
         umap_coords_sampled = umap_coords[indices]
     elif n_cells_to_plot < num_data:
-        #In future versions it would be nice to be able to sample cells in a way that they minimize overlap of pie charts
-        umap_coords_sampled = umap_coords[np.random.choice(num_data, size=n_cells_to_plot, replace=False), :]
+        # In future versions it would be nice to be able to sample cells in a way that they minimize overlap of pie charts
+        umap_coords_sampled = umap_coords[
+            np.random.choice(num_data, size=n_cells_to_plot, replace=False), :
+        ]
     else:
         umap_coords_sampled = umap_coords
 
@@ -233,14 +227,6 @@ def plot_fate_probabilities_with_pie_charts(
         colors = plt.cm.tab10(range(fate_matrix.shape[1]))
         if "Unobserved" in target_names:
             colors[-1] = "lightgray"
-
-    if entropy_fade:
-        ax.scatter(
-            umap_coords_sampled[:, 0],
-            umap_coords_sampled[:, 1],
-            color=[0.9, 0.9, 0.9],
-            s=s,
-        )
 
     for i, row in enumerate(umap_coords_sampled):
         x, y = row[0], row[1]
@@ -312,7 +298,6 @@ def plot_fate_probabilities_with_pie_charts(
     return None
 
 
-
 def plot_avg_fate_per_celltype(
     adata,
     output_key="stitchOT",
@@ -346,7 +331,9 @@ def plot_avg_fate_per_celltype(
     fate_matrix = adata.uns[output_key]["fate_matrix"]
     target_names = adata.uns[output_key]["target_names"]
     avg_fate_per_celltype = {}
-    adata_source = adata[adata.obs["location"] == adata.uns[output_key]["source_name"]].copy()
+    adata_source = adata[
+        adata.obs["location"] == adata.uns[output_key]["source_name"]
+    ].copy()
 
     for celltype in adata_source.obs[celltype_key].unique():
         celltype_mask = adata_source.obs[celltype_key] == celltype
@@ -384,8 +371,6 @@ def plot_avg_fate_per_celltype(
         plt.close(fig)
 
     return None
-
-
 
 
 def plot_homing_niches(
@@ -443,7 +428,9 @@ def plot_homing_niches(
     else:
         tissue_colors = {tissue: color for tissue, color in zip(target_names, colors)}
 
-    fig, ax = plt.subplots(ncols=len(target_names), figsize=figsize, layout="constrained")
+    fig, ax = plt.subplots(
+        ncols=len(target_names), figsize=figsize, layout="constrained"
+    )
 
     for i, tissue in enumerate(target_names):
         adata_tissue = adata[adata.obs["location"] == tissue].copy()
@@ -466,7 +453,9 @@ def plot_homing_niches(
         current_ax.set_yticks([])
 
         source_cells_fate_prob = fate_matrix[:, target_names.index(tissue)]
-        source_cells_high_fate_coupling = coupling_matrix[source_cells_fate_prob > 1 / 3, :][:, fate_groups[i]]
+        source_cells_high_fate_coupling = coupling_matrix[
+            source_cells_fate_prob > 1 / 3, :
+        ][:, fate_groups[i]]
 
         row_sums = source_cells_high_fate_coupling.sum(axis=1, keepdims=True)
         normalized_weights = np.divide(

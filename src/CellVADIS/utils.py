@@ -1,5 +1,4 @@
-"""Utility helpers for fate aggregation and correlation analysis.
-"""
+"""Utility helpers for fate aggregation and correlation analysis."""
 
 import warnings
 
@@ -116,10 +115,6 @@ def obs_key_wise_subsampling(
     return adata[selection].copy()
 
 
-
-
-
-
 def corr_marker_with_fates(
     adata,
     marker_genes,
@@ -196,7 +191,9 @@ def corr_marker_with_fates(
             corr_coef, _ = spearmanr(gene_expression, fate_probs, nan_policy="omit")
             results[i, fate_idx] = corr_coef
 
-    results_full = np.zeros((adata.shape[1], adata.uns[output_key]["fate_matrix"].shape[1]))
+    results_full = np.zeros(
+        (adata.shape[1], adata.uns[output_key]["fate_matrix"].shape[1])
+    )
     for i, gene in enumerate(marker_genes):
         if gene in adata.var_names:
             gene_idx = adata.var_names.get_loc(gene)
@@ -225,7 +222,6 @@ def corr_marker_with_fates(
         return results_df
 
     return None
-
 
 
 def corr_marker_with_target_marginals(
@@ -272,7 +268,13 @@ def corr_marker_with_target_marginals(
         marker_genes = adata.var_names
 
     fate_matrix = adata.uns[output_key]["fate_matrix"]
-    target_marginals = adata.uns[output_key]["OT_plan"].sum(axis=0) #change this to be renormalized against source cells with >1/3 fate towards this tissue
+    target_marginals = adata.uns[
+        output_key
+    ][
+        "OT_plan"
+    ].sum(
+        axis=0
+    )  # change this to be renormalized against source cells with >1/3 fate towards this tissue
     fate_groups = adata.uns[output_key]["fate_groups"]
     target_names = adata.uns[output_key]["target_names"]
 
@@ -285,7 +287,9 @@ def corr_marker_with_target_marginals(
     if obsm_key is not None:
         gene_expression_matrix = adata.obsm[obsm_key]
     else:
-        gene_expression_matrix = adata.X.todense() if hasattr(adata.X, "todense") else adata.X
+        gene_expression_matrix = (
+            adata.X.todense() if hasattr(adata.X, "todense") else adata.X
+        )
         if hasattr(gene_expression_matrix, "toarray"):
             gene_expression_matrix = gene_expression_matrix.todense().toarray()
 

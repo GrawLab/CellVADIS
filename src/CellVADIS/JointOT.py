@@ -6,7 +6,6 @@ import ot
 from .utils import get_fates
 
 
-
 def JointOT(
     adata,
     obsm_key,
@@ -96,7 +95,9 @@ def JointOT(
         data_source = adata[adata.obs["location"] == source_name].X
         data_target = adata[adata.obs["location"].isin(target_names)].X
 
-    target_locations = adata[adata.obs["location"].isin(target_names)].obs["location"].values
+    target_locations = (
+        adata[adata.obs["location"].isin(target_names)].obs["location"].values
+    )
 
     a = np.ones(data_source.shape[0]) / data_source.shape[0]
     b = np.ones(data_target.shape[0]) / data_target.shape[0]
@@ -131,7 +132,9 @@ def JointOT(
     )
 
     if np.isnan(OT_plan).any():
-        warnings.warn("OT_plan contains NaN values; replacing them with 0.", UserWarning)
+        warnings.warn(
+            "OT_plan contains NaN values; replacing them with 0.", UserWarning
+        )
     OT_plan = np.nan_to_num(OT_plan, nan=0.0, posinf=0.0, neginf=0.0)
 
     norm_OT_plan = OT_plan / OT_plan.sum(axis=1, keepdims=True)

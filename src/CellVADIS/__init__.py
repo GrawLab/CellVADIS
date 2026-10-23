@@ -1,4 +1,5 @@
-from CellVADIS.JointOT import JointOT
-from CellVADIS.StitchOT import StitchOT
-import CellVADIS.utils as utils
-import CellVADIS.plotting as plotting
+from .JointOT import JointOT
+from .StitchOT import StitchOT
+from . import plotting, utils
+
+__all__ = ["JointOT", "StitchOT", "plotting", "utils"]
