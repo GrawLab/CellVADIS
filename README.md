@@ -55,18 +55,31 @@ If you are running the example notebooks, you may also need:
 import CellVADIS
 
 # Assume adata is an AnnData object with:
-# - expression matrix/latent space representation used for distance calculation in adata.X or adata.obsm[...]
-# - a tissue/location annotation in adata.obs["location"], for this example this should include Source and Target1 to Target4
+# - expression matrix/latent space representation used for distance calculation
+#   in adata.X or adata.obsm[...]
+# - a tissue/location annotation in adata.obs["location"],
+#   for this example this should include SOURCE and TARGET1 to TARGET4
 
 source_name = "SOURCE"
 target_names = ["TARGET1", "TARGET2", "TARGET3", "TARGET4"]
 
+# Recommended: balance the dataset before running CellVADIS. This helps reduce
+# the dominance of large tissue groups, speeds up OT, and is often preferable to
+# applying CellVADIS on the full dataset. Too large cell numbers (>50k) might also lead to memory issues.
+adata = CellVADIS.utils.obs_key_wise_subsampling(
+    adata,
+    obs_keys="location",
+    N_target=5000, #Number of cells to keep for each target tissue
+    N_source=10000, #Number of cells to keep in source tissue 
+    source_name=source_name,
+)
+
+# Run the OT models on the subsampled data.
 CellVADIS.JointOT(
     adata=adata,
     obsm_key="X_pca",
     source_name=source_name,
     target_names=target_names,
-    store_in_adata=True,
 )
 
 CellVADIS.StitchOT(
@@ -74,22 +87,58 @@ CellVADIS.StitchOT(
     obsm_key="X_pca",
     source_name=source_name,
     target_names=target_names,
-    store_in_adata=True,
 )
 
-# Plot overall tissue contributions
+# Plot overall tissue-specific transition proportions
 CellVADIS.plotting.plot_tissue_transition_proportions(
     adata,
     output_key="stitchOT",
     return_proportions=True,
 )
 
-# Plot dominant fate per source cell
+# Plot dominant fate per source cell in a UMAP embedding
 CellVADIS.plotting.plot_dominant_fates(
     adata,
     output_key="stitchOT",
 )
+
+# Plot fate probabilities projected on individual source cells as pie charts
+CellVADIS.plotting.plot_fate_probabilities_with_pie_charts(
+    adata,
+    output_key="stitchOT",
+    n_cells_to_plot=100,
+)
+
+# Plot average fate probability by cell type as a heatmap (if cell type information is available)
+CellVADIS.plotting.plot_avg_fate_per_celltype(
+    adata,
+    output_key="stitchOT",
+    celltype_key="celltype",
+)
+
+# Correlate marker genes with inferred source-cell fate probabilities
+#  to identify trafficking signatures
+marker_fate_corr = CellVADIS.utils.corr_marker_with_fates(
+    adata,
+    marker_genes=["CD3D", "CXCR6", "CCR7"],
+    output_key="stitchOT",
+    sort_df_by="mean",
+)
+
+# Plot homing niches: target-side tissue projections of high-probability source cells
+CellVADIS.plotting.plot_homing_niches(
+    adata,
+    output_key="jointOT",
+)
+
+# Correlate marker genes with target marginals to quantify homing niches
+marker_target_corr = CellVADIS.utils.corr_marker_with_target_marginals(
+    adata,
+    marker_genes=["CD3D", "CXCR6", "CCR7"],
+    output_key="jointOT",
+)
 ```
+
 
 ## Output structure
 
@@ -126,7 +175,7 @@ The inferred output is a source-to-target probability distribution for each sour
 - correlation analysis can help connect fate probabilities to marker expression to identify trafficking signatures,
 - relating expressions levels on tissue cells with their received mass as inferred by the unbalanced optimal transport methods might reveal homing niches and identify tissue-entry points.
 -Both Joint- and StitchOT can also be run with `assign_unsampled_probs=True`, which takes into account that not all tissues a source cell could traffick to are sampled and assigns an additional probability representing the fate potential towards these unobserved tissues.
--While benchmarking on synthetic data revealed ([Repo link to paper results](https://github.com/GrawLab/CellVADIS_analysis)) that JointOT and StitchOT are both similar in accuracy, we suggest to choose the method based on the downstream tasks. JointOT is preferable for analysis from the viewpoint of the target cells (identification of homing niches etc.), while StitchOT might be preferred for source-cell based analysis, such as identifying trafficking signatures.
+- While benchmarking on synthetic data revealed ([Repo link to paper results](https://github.com/GrawLab/CellVADIS_analysis)) that JointOT and StitchOT are both similar in accuracy, we suggest to choose the method based on the downstream tasks. JointOT is preferable for analysis from the viewpoint of the target cells (identification of homing niches etc.), while StitchOT might be preferred for source-cell based analysis, such as identifying trafficking signatures.
 
 
 ## License
