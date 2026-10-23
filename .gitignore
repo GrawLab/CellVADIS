@@ -1,0 +1,4 @@
+src/CellVADIS.egg-info
+docs/data/*
+src/CellVADIS/__pycache__
+.venv

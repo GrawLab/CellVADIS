@@ -1,0 +1,54 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=61.0", "wheel>=0.37.1"]
+
+
+[project]
+name = "CellVADIS"
+dynamic = ["version"]
+description = "Cell mapping via optimal transport: Inferring cross-tissue dynamics of Immune cells from single-cell snapshots"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.5.4",
+    "pandas>=3.0.6",
+    "scipy>=1.18.1",
+    "scanpy>=1.12.4",
+    "matplotlib>=3.11.2",
+    "seaborn>=0.13.2",
+    "POT>=0.9.7.post1",
+]
+license = {file = "LICENSE"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Mathematics"
+]
+keywords = [
+    "single-cell",
+    "bio-informatics",
+    "optimal transport"
+]
+authors = [
+    {name = "Lennart Wicker"},
+    {name = "Frederik Graw"}
+]
+maintainers = [
+    {name = "Lennart Wicker", email = "lennart.wicker@fau.de"},
+    {name = "Frederik Graw", email = "frederik.graw@fau.de"}
+]
+
+[project.optional-dependencies]
+notebooks = [
+    "harmonypy>=2.1.0",
+    "pytometry>=0.1.6",
+]
