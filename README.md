@@ -7,15 +7,15 @@ CellVADIS is a Python toolkit based on optimal transport for inferring cross-tis
 It relates to the following publication:
 * Wicker L., Varga S., Graw F.: **CellVADIS: Inferring cross-tissue immune cell trafficking dynamics from single-cell snahpshots**,(doi)
 
-By connecting single-cell measurements across tissue sites, CellVADIS enables the prediction of individual cell migration fates,the identification of tissue-specific trafficking signatures on circulating cells, as well as discovering tissue-specific homing niches of tissue-entering cells, which could support the inference of location-specific cell developmental trajectories.
-It is designed for scenarios where you have a source compartment (for example blood) and want to estimate how these source cells are distributed across one or more target tissues or states.
+By connecting single-cell measurements across tissue sites, CellVADIS enables the prediction of individual cell migration fates, the identification of tissue-specific trafficking signatures on circulating cells, as well as the determination of tissue-specific 'homing niches' for tissue-entering cells, which supports the inference of location-specific cell developmental trajectories.
+It is designed for scenarios in which a source compartment is defined (e.g., blood) and one wants to estimate how these source cells are distributed across one or more target tissues (or states).
 
-## What CellVADIS can do
+## What CellVADIS can do:
 
-- infer tissue-specific fate probabilities from a source population
-- score how gene expression correlates with inferred tissue fates for source cells (trafficking signatures), as well as the mass received by tissue cells (homing niches).
-- summarize transitions with plotting functions for tissues, dominant fates, and homing niches
-- work naturally with `AnnData` objects and `scanpy` or `pytometry` workflows
+- Infer tissue-specific fate probabilities from a source population
+- Score how gene expression correlates with inferred tissue fates for source cells (trafficking signatures), as well as the mass received by tissue cells (homing niches).
+- Summarize transitions with plotting functions for tissues, dominant fates, and homing niches
+- Work naturally with `AnnData` objects and `scanpy` or `pytometry` workflows
 
 Typical use cases include:
 
@@ -173,12 +173,12 @@ These notebooks show how to prepare the data, run the models, and visualize the 
 
 The inferred output is a source-to-target probability distribution for each source cell. In practice:
 
-- values near 1 in one target column indicate strong destination preference,
-- mixed distributions may reflect broad or uncertain trafficking behavior,
-- correlation analysis can help connect fate probabilities to marker expression to identify trafficking signatures,
-- relating expressions levels on tissue cells with their received mass as inferred by the unbalanced optimal transport methods might reveal homing niches and identify tissue-entry points.
--Both Joint- and StitchOT can also be run with `assign_unsampled_probs=True`, which takes into account that not all tissues a source cell could traffick to are sampled and assigns an additional probability representing the fate potential towards these unobserved tissues.
-- While benchmarking on synthetic data revealed ([Repo link to paper results](https://github.com/GrawLab/CellVADIS_analysis)) that JointOT and StitchOT are both similar in accuracy, we suggest to choose the method based on the downstream tasks. JointOT is preferable for analysis from the viewpoint of the target cells (identification of homing niches etc.), while StitchOT might be preferred for source-cell based analysis, such as identifying trafficking signatures.
+- Values near 1 in one target column indicate strong destination preference,
+- Mixed distributions may reflect broad or uncertain trafficking behavior,
+- Correlation analysis can help connect fate probabilities to marker expression to identify trafficking signatures,
+- Relating expressions levels on tissue cells with their received mass as inferred by the unbalanced optimal transport methods might reveal homing niches and identify tissue-entry points.
+- Both Joint- and StitchOT can also be run with `assign_unsampled_probs=True`, which takes into account that not all tissues a source cell could traffick to are sampled and assigns an additional probability representing the fate potential towards these unobserved tissues.
+- While benchmarking on synthetic data revealed ([Repo link to paper results](https://github.com/GrawLab/CellVADIS_analysis)) that JointOT and StitchOT are both similar in accuracy, we suggest to choose the method based on the downstream tasks. JointOT is preferred for analyses from the viewpoint of the target cells (identification of homing niches etc.), while StitchOT might be preferred for source-cell based analysis, such as identifying trafficking signatures.
 
 
 ## License
