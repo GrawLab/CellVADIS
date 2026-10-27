@@ -1,6 +1,8 @@
 # CellVADIS
 
-<img src="docs/CellVADIS_logo_transparent.png" width="50%" alt="CellVADIS logo"/>
+<p align="center">
+    <img src="docs/CellVADIS_logo.png" width="80%" alt="CellVADIS logo"/>
+</p>
 
 CellVADIS is a Python toolkit based on optimal transport for inferring cross-tissue immune cell dynamics from single-cell snapshots, as obtained by e.g. scRNA-seq, flow cytometry or mass cytometry.
 
