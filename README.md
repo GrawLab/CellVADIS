@@ -7,7 +7,7 @@
 CellVADIS is a Python toolkit based on optimal transport for inferring cross-tissue immune cell dynamics from single-cell snapshots, as obtained by e.g. scRNA-seq, flow cytometry or mass cytometry.
 
 It relates to the following publication:
-* Wicker L., Varga S., Graw F.: **CellVADIS: Inferring cross-tissue immune cell trafficking dynamics from single-cell snahpshots**,(doi)
+* Wicker L., Varga S., Graw F.: **CellVADIS: Inferring cross-tissue immune cell trafficking dynamics from single-cell snapshots**,(doi)
 
 By connecting single-cell measurements across tissue sites, CellVADIS enables the prediction of individual cell migration fates, the identification of tissue-specific trafficking signatures on circulating cells, as well as the determination of tissue-specific 'homing niches' for tissue-entering cells, which supports the inference of location-specific cell developmental trajectories.
 It is designed for scenarios in which a source compartment is defined (e.g., blood) and one wants to estimate how these source cells are distributed across one or more target tissues (or states).
